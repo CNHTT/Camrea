@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
 
+
+    private File file;
 
 
 
@@ -90,7 +94,10 @@ public class MainActivity extends AppCompatActivity {
             case UCrop.REQUEST_CROP://UCrop裁剪之后的处理
                 if (resultCode == RESULT_OK) {
                     resultUri = UCrop.getOutput(data);
-                    roadImageView(resultUri, imageView);
+                   file =   roadImageView(resultUri, imageView);
+                    Log.d("File",file.getName());
+                    Log.d("File",file.getPath());
+                    Log.d("File",file.getParent());
                     SPUtils.putContent(mContext, "AVATAR", resultUri.toString());
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     final Throwable cropError = UCrop.getError(data);
@@ -119,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 dontAnimate().
                 into(imageView);
 
-        return (new File(PhotoUtils.getImageAbsolutePath(this, uri)));
+         return (new File(PhotoUtils.getImageAbsolutePath(this, uri)));
     }
     private void initUCrop(Uri uri) {
         //Uri destinationUri = RxPhotoUtils.createImagePathUri(this);
@@ -128,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         long time = System.currentTimeMillis();
         String imageName = timeFormatter.format(new Date(time));
 
-        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), imageName + ".jpeg"));
+        Uri destinationUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() +App.DISK_CACHE_PATH, imageName + ".jpeg"));
 
         UCrop.Options options = new UCrop.Options();
         //设置裁剪图片可操作的手势
@@ -165,4 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 .start(this);
     }
 
+    public void onSava(View view) {
+
+    }
 }
