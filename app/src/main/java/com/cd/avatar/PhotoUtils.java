@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -80,7 +81,7 @@ public class PhotoUtils {
     }
 
     public static void cropImage(Activity activity, Uri srcUri) {
-        cropImageUri = createImagePathUri(activity);
+        cropImageUri = createImagePathUri(activity,"");
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(srcUri, "image/*");
@@ -201,16 +202,10 @@ public class PhotoUtils {
             SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
             long time = System.currentTimeMillis();
             String imageName = timeFormatter.format(new Date(time));
-            // ContentValues是我们希望这条记录被创建时包含的数据信息
-            ContentValues values = new ContentValues(3);
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, imageName);
-            values.put(MediaStore.Images.Media.DATE_TAKEN, time);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-
             if (status.equals(Environment.MEDIA_MOUNTED)) {// 判断是否有SD卡,优先使用SD卡存储,当没有SD卡时使用手机存储
-                imageFilePath[0] = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                imageFilePath[0] = Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() +App.DISK_CACHE_PATH, imageName + ".jpeg"));
             } else {
-                imageFilePath[0] = context.getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+                imageFilePath[0] = Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() +App.DISK_CACHE_PATH, imageName + ".jpeg"));
             }
         }
 

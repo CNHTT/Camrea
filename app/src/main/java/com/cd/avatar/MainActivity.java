@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
             case PhotoUtils.GET_IMAGE_BY_CAMERA://选择照相机之后的处理
                 if (resultCode == RESULT_OK) {
                    /* data.getExtras().get("data");*/
-//                    RxPhotoUtils.cropImage(ActivityUser.this, RxPhotoUtils.imageUriFromCamera);// 裁剪图片
-                    initUCrop(PhotoUtils.imageUriFromCamera);
+                    PhotoUtils.cropImage(MainActivity.this, PhotoUtils.imageUriFromCamera);// 裁剪图片
+//                    initUCrop(PhotoUtils.imageUriFromCamera);
                 }
 
                 break;
